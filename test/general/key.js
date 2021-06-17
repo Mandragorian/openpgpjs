@@ -3814,14 +3814,14 @@ VYGdb3eNlV8CfoEC
         privateKey: await openpgp.readKey({ armoredKey: priv_key_rsa }),
         passphrase: 'hello world'
       });
-      const total = privateKey.subKeys.length;
+      const total = privateKey.getSubkeys().length;
       const opt2 = { type: "symmetric", symmetricCipher: 'aes256' };
       let newPrivateKey = await privateKey.addSubkey(opt2);
       const armoredKey = await newPrivateKey.armor();
       newPrivateKey = await openpgp.readKey({ armoredKey: armoredKey });
-      const subKey = newPrivateKey.subKeys[total];
+      const subKey = newPrivateKey.getSubkeys()[total];
       expect(subKey).to.exist;
-      expect(newPrivateKey.subKeys.length).to.be.equal(total + 1);
+      expect(newPrivateKey.getSubkeys().length).to.be.equal(total + 1);
       expect(subKey.getAlgorithmInfo().symmetric).to.be.equal('aes256');
       expect(subKey.keyPacket.publicParams.digest).to.exist.and.to.have.length(32);
       expect(subKey.keyPacket.privateParams.keyMaterial).to.exist.and.to.have.length(32);
@@ -3835,8 +3835,8 @@ VYGdb3eNlV8CfoEC
       const { key } = await openpgp.generateKey(opt);
       const armoredKey = await key.armor();
       const newKey = await openpgp.readKey({ armoredKey: armoredKey });
-      const subKey = newKey.subKeys[0];
-      expect(newKey.subKeys.length).to.be.equal(1);
+      const subKey = newKey.getSubkeys()[0];
+      expect(newKey.getSubkeys().length).to.be.equal(1);
       expect(subKey).to.exist;
       expect(subKey.getAlgorithmInfo().symmetric).to.be.equal('aes256');
       expect(subKey.keyPacket.publicParams.cipher).to.exist;
@@ -3851,8 +3851,8 @@ VYGdb3eNlV8CfoEC
       const opt = { rsaBits: 512, userIDs: [userId], subkeys:[{ type: "symmetric", symmetricCipher: 'aes256' }] };
 
       const { key } = await openpgp.generateKey(opt);
-      const subKey = key.subKeys[0];
-      expect(key.subKeys.length).to.be.equal(1);
+      const subKey = key.getSubkeys()[0];
+      expect(key.getSubkeys().length).to.be.equal(1);
       expect(subKey).to.exist;
       expect(subKey.getAlgorithmInfo().symmetric).to.be.equal('aes256');
       expect(subKey.keyPacket.publicParams.cipher).to.exist;
