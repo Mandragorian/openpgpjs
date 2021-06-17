@@ -1,4 +1,4 @@
-const openpgp = typeof window !== 'undefined' && window.openpgp ? window.openpgp : require('../../dist/openpgp');
+const openpgp = typeof window !== 'undefined' && window.openpgp ? window.openpgp : require('../..');
 
 const expect = require('chai').expect;
 
@@ -31,11 +31,11 @@ T7KAKygwz0EpOWpx2RHtshDy/bZ1EC8Ia4qDAebameIqCU929OmY1uI=
 =3iIr
 -----END PGP MESSAGE-----`;
 
-describe('Forwarding', function() {
+module.exports = () => describe('Forwarding', function() {
   it('can decrypt forwarded ciphertext', async function() {
-    const charlieKey = (await openpgp.key.readArmored(charlieKeyArmored)).keys[0];
-    const msg = await openpgp.message.readArmored(fwdCiphertextArmored);
-    const result = await openpgp.decrypt({ privateKeys: charlieKey, message: msg });
+    const charlieKey = (await openpgp.readKey({ armoredKey: charlieKeyArmored })).getKeys()[0];
+    const msg = await openpgp.readMessage({ armoredMessage: fwdCiphertextArmored });
+    const result = await openpgp.decrypt({ decryptionKeys: charlieKey, message: msg });
 
     expect(result).to.exist;
     expect(result.data).to.equal('Hello Bob, hello world');

@@ -26,6 +26,8 @@
  * @module type/kdf_params
  * @private
  */
+const util = require('../../src/util');
+const enums = require('../../src/enums');
 
 class KDFParams {
   /**
@@ -91,7 +93,7 @@ class KDFParams {
       return new Uint8Array([3, 1, this.hash, this.cipher]);
     }
 
-    const v2Fields = utils.concatUint8Array([
+    const v2Fields = util.concatUint8Array([
       new Uint8Array([4, 2, this.hash, this.cipher, this.flags]),
       this.replacementFingerprint || new Uint8Array(),
       this.replacementKDFParams || new Uint8Array()
